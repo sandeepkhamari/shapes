@@ -30,7 +30,3 @@ shape::~shape()
 {
   cout<<"destroying a shape object"<<endl;
 }
-
-main()
-{
-}

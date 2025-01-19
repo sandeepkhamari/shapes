@@ -1,28 +1,44 @@
-#all: src\shape\shape.cpp src\circle\circle.cpp src\triangle\triangle.cpp src\main.cpp
-#	g++ -I .\src\shape\ -I .\src\circle\ -I .\src\triangle\ -I .\src\  src\shape\shape.cpp src\circle\circle.cpp src\triangle\triangle.cpp src\main.cpp -o main
+CC = g++
 
 SRC_DIR = src
 
-INC_DIR = include
+INC_DIR = include\
 
+# directory where .o files will be extracted to
 OBJ_DIR = obj
+#VPATH = src:src/shape/ src/circle/ src/triangle/
 
-CFLAG = -Wall -g -O2
+# SRC_FILES = $(wildcard $(SRC_DIR)/*.c)
+SRC_FILES = $(shell find . -type f -name *.cpp)
+#SRC_FILES1= $(shell find . -type f -name *.cpp)
+#SRC_FILES = $(shell find . -type f -name *.cpp -printf "%f ")
+#OBJ_FILES = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRC_FILES))
+#OBJ_FILES=$(patsubst %.cpp, ${OBJ_DIR}/%.o, ${SRC_FILES})
 
-CXX = g++
+OBJ_FILES = $(patsubst %.cpp, %.o, ${SRC_FILES})
 
-SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp)
-
-OBJ_FILES = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC_FILES))
+#OBJ_FILES1 = $(patsubst %.o, $(OBJ_DIR)/%.o, $(OBJ_FILES))
+#OBJ_FILES1 = $(patsubst %.cpp, %.o, ${SRC_FILES1})
+#OBJ_FILES= $(SRC_FILES:.cpp=.o)
 
 all: program
-
+#program: $(OBJ_FILES)
+#	$(CC) -o program $(OBJ_FILES) -I $(INC_DIR)
+#program: $(OBJ_FILES)
 program: $(OBJ_FILES)
-	$(CXX) -o program $(OBJ_FILES)
+	$(CC) $(OBJ_FILES) -o program -I $(INC_DIR)	
+	#$(CC) -o program $(OBJ_FILES1) -I $(INC_DIR)
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	mkdir -p $(OBJ_DIR)
-	$(CXX) -I$(INC_DIR) -c $< -o $@
-
-clean: 
-	rm -f main.exe	
+# -p means ignore parent directory if extant
+#$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+#$(OBJ_DIR)/%.o: %.cpp
+#$(OBJ_FILES): $(SRC_FILES)
+#$(OBJ_FILES1): $(SRC_FILES1)
+#$(OBJ_FILES1): $(SRC_FILES1)/%.cpp
+#$(OBJ_FILES1): %.o: $(SRC_FILES1)
+$(OBJ_FILES):%o: %cpp 
+	#mkdir -p $(OBJ_DIR)
+	$(CC) -c $< -o $@ -I $(INC_DIR)
+clean:
+	#rm -rf program $(OBJ_DIR)
+	rm -rf src/shape/shape.o src/circle/circle.o src/triangle/triangle.o src/main.o
